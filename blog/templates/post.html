@@ -1,0 +1,25 @@
+{% extends 'basic.html' %}
+{% block content %}
+    <article class="media content-section">
+        <div class="media-body">
+            <div class="article-metadata d-flex justify-content-between">
+                <div>
+                    <img src="{{ url_for('static', filename='profile_images/' + post.author.profile_image) }}" alt="avatar"
+                        class="rounded-circle article-img img-fluid mb-2" style="border: 2px solid">
+                    <a class="mr-2 fs-4" href="#">{{ post.author }}</a></h4>
+                    <small class="text-muted">{{ post.date_posted.strftime("%d / %m / %Y") }}</small>
+                </div>
+                <div>
+                    <div>
+                        <button type="button" class="btn btn-danger mt-3" data-bs-toggle="modal" data-bs-target="#updatePost"
+                        {% if current_user != post.author %} disabled {% endif %} >Delete</button>
+                        <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#updatePost{{ post.id }}"
+                        {% if current_user != post.author  %} disabled {% endif %}>Update</button>
+                    </div>
+                </div>
+            </div>
+            <h2 class="article-title">{{ post.title }}</h2>
+            <p class="article-content">{{ post.content }}</p>
+        </div>
+    </article>
+{% endblock  %}
