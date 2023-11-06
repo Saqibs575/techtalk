@@ -110,15 +110,20 @@ WORKSPACE
 
 # **Key Features** <a name="features"></a>
 
-## **User Authentication:** Securely register an account, log in, and manage your profile with ease. **TechTalk** Blog App provides a secure user authentication system, allowing you to manage your account with confidence. Register an account, log in securely, and explore the full range of features available to you.
+## **User Authentication:** 
+Securely register an account, log in, and manage your profile with ease. **TechTalk** Blog App provides a secure user authentication system, allowing you to manage your account with confidence. Register an account, log in securely, and explore the full range of features available to you.
 
-## **Effortless Blogging:** Create, update, and delete your posts effortlessly through a clean and intuitive interface.Manage your blog content effortlessly with TechTalk's CRUD operations. Create new posts, update existing ones, and remove posts you no longer need. The intuitive interface ensures a hassle-free content management experience.
+## **Effortless Blogging:** 
+Create, update, and delete your posts effortlessly through a clean and intuitive interface.Manage your blog content effortlessly with TechTalk's CRUD operations. Create new posts, update existing ones, and remove posts you no longer need. The intuitive interface ensures a hassle-free content management experience.
 
-## **Project Structure** **TechTalk** follows a well-organized project structure, making it easy for developers to understand and contribute to the project. The codebase is clean and modular, with separate components for models, forms, and the main application logic.
+## **Project Structure** 
+**TechTalk** follows a well-organized project structure, making it easy for developers to understand and contribute to the project. The codebase is clean and modular, with separate components for models, forms, and the main application logic.
 
-## **User-Friendly Interface:** **TechTalk** is designed with simplicity in mind, ensuring a smooth and enjoyable user experience.
+## **User-Friendly Interface:** 
+**TechTalk** is designed with simplicity in mind, ensuring a smooth and enjoyable user experience.
 
-## **Responsive Design:** Access your blog on any device with our responsive design, ensuring a seamless experience on desktops, tablets, and smartphones.
+## **Responsive Design:** 
+Access your blog on any device with our responsive design, ensuring a seamless experience on desktops, tablets, and smartphones.
 
 
 ---------------------------
