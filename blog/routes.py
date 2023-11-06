@@ -30,17 +30,39 @@ def save_profile(profile_image) :
 
 class Home(MethodView) :
     def get(self) :
-        form=PostForm()
-        posts = Post.query.all()
+        page = request.args.get("page", 1, type=int)
+        posts = Post.query.order_by(Post.date_posted.desc()).paginate(per_page=5, page=page)
         if current_user.is_authenticated :
+            form=PostForm()
             return render_template("index.html", title="Home", posts=posts, form=form)
-        return render_template("index.html", title="Home", posts=posts, form=form)
+        return render_template("index.html", title="Home", posts=posts)
+app.add_url_rule("/", view_func=Home.as_view("home"))
+
+class UserPosts(MethodView) :
+    def get(self, username) :
+        form=PostForm()
+        page = request.args.get("page", 1, type=int)
+        user = User.query.filter_by(username=username).first_or_404()
+        posts = (
+                    Post.query.filter_by(author=user).
+                    order_by(Post.date_posted.desc()).
+                    paginate(per_page=5, page=page)
+                )
+        return render_template("user_posts.html", title="Home", posts=posts, user=user, form=form)
+        
+        # posts = Post.query.order_by(Post.date_posted.desc()).paginate(per_page=5, page=page)
+        # if current_user.is_authenticated :
+        #     form=PostForm()
+        #     return render_template("index.html", title="Home", posts=posts, form=form)
+        # return render_template("index.html", title="Home", posts=posts)
+app.add_url_rule("/user-posts/<string:username>", view_func=UserPosts.as_view("user_posts"))
 
 class About(MethodView) :
     def get(self) :
         if current_user.is_authenticated :
             return render_template("index.html", title="Home")
         return render_template("index.html", title="Home")
+app.add_url_rule("/about", view_func=About.as_view("about"))
 
 class Register(MethodView) :
     def get(self) :
@@ -62,6 +84,7 @@ class Register(MethodView) :
             flash(f"Account Creatd Successfully for { form.username.data }", "success")
             return redirect(url_for("home"))
         return render_template("register.html", title="Register", form=form)
+app.add_url_rule("/register", view_func=Register.as_view("register"))
 
 class Login(MethodView) :
     def get(self) :
@@ -81,11 +104,13 @@ class Login(MethodView) :
             else :
                 flash("Login Failed. Please check Your Email and Password", "danger")
         return render_template("login.html", title="Login", form=form)
+app.add_url_rule("/login", view_func=Login.as_view("login"))
 
 class Logout(MethodView) :
     def get(self) :
         logout_user()
         return redirect(url_for("home"))
+app.add_url_rule("/logout", view_func=Logout.as_view("logout"))
 
 class Profile(MethodView) :
     decorators = [login_required]
@@ -94,6 +119,7 @@ class Profile(MethodView) :
         return render_template("profile.html", title="Profile", form=form)
     def post(self, id):
         return redirect(url_for("profile"))
+app.add_url_rule("/profile", view_func=Profile.as_view("profile"))
 
 class UpdateProfile(MethodView) :
     decorators = [login_required]
@@ -106,6 +132,7 @@ class UpdateProfile(MethodView) :
             return redirect(url_for("profile"))
         flash("Profile Update Failed. username & email should be unique and Valid", "danger")
         return redirect(url_for("profile"))
+app.add_url_rule("/update-profile", view_func=UpdateProfile.as_view("update_profile"))
 
 class UpdateProfileImage(MethodView) :
     decorators=[login_required]
@@ -119,6 +146,7 @@ class UpdateProfileImage(MethodView) :
             return redirect(url_for("profile"))
         flash("Failed to Update Profile Image. Only .jpg, .jpeg and .png files are allowed", "danger")
         return redirect(url_for("profile"))
+app.add_url_rule("/update-profile-image", view_func=UpdateProfileImage.as_view("update_profile_image"))
 
 class NewPost(MethodView) :
     decorators=[login_required]
@@ -138,12 +166,15 @@ class NewPost(MethodView) :
             db.session.rollback()
         flash("All Posts Must be Unique", "danger")
         return redirect(url_for("new_post"))
+app.add_url_rule("/post/new", view_func=NewPost.as_view("new_post"))
 
 class Posts(MethodView) :
     decorators=[login_required]
     def get(self, id) :
+        form=PostForm()
         post = Post.query.get_or_404(id)
-        return render_template("post.html", title=post.title, post=post)
+        return render_template("post.html", title=post.title, post=post, form=form)
+app.add_url_rule("/post/<int:id>", view_func=Posts.as_view("posts"))
 
 class UpdatePosts(MethodView) :
     decorators=[login_required]
@@ -163,6 +194,7 @@ class UpdatePosts(MethodView) :
             db.session.rollback()
         flash("Duplicate Posts are NOT allowed", "danger")
         return redirect(url_for("posts", id=id))
+app.add_url_rule("/post/<int:id>/update", view_func=UpdatePosts.as_view("update_posts"))
 
 class DeletePosts(MethodView) :
     decorators=[login_required]
@@ -182,16 +214,4 @@ class DeletePosts(MethodView) :
             db.session.rollback()
         flash("Duplicate Posts are NOT allowed", "danger")
         return redirect(url_for("posts", id=id))
-
-app.add_url_rule("/", view_func=Home.as_view("home"))
-app.add_url_rule("/about", view_func=About.as_view("about"))
-app.add_url_rule("/login", view_func=Login.as_view("login"))
-app.add_url_rule("/logout", view_func=Logout.as_view("logout"))
-app.add_url_rule("/profile", view_func=Profile.as_view("profile"))
-app.add_url_rule("/register", view_func=Register.as_view("register"))
-app.add_url_rule("/post/<int:id>", view_func=Posts.as_view("posts"))
-app.add_url_rule("/post/<int:id>/update", view_func=UpdatePosts.as_view("update_posts"))
 app.add_url_rule("/post/<int:id>/delete", view_func=DeletePosts.as_view("delete_posts"))
-app.add_url_rule("/post/new", view_func=NewPost.as_view("new_post"))
-app.add_url_rule("/update-profile", view_func=UpdateProfile.as_view("update_profile"))
-app.add_url_rule("/update-profile-image", view_func=UpdateProfileImage.as_view("update_profile_image"))

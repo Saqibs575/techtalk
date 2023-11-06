@@ -1,0 +1,136 @@
+{% extends 'basic.html' %}
+{% block content %}
+    <div class="d-flex">
+        <h3 class="mb-3">{{ user.username }}'s POSTS </h3>
+        <h6 class="text-muted" style="margin-left: 15px; padding-top:7px">Total {{ posts.total }} posts by {{ user.username }}</h6>
+    </div>
+    {% for post in posts.items %}
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata d-flex justify-content-between">
+                    <div>
+                        <a href="{{ url_for('profile') }}"><img src="{{ url_for('static', filename='profile_images/' + post.author.profile_image) }}" alt="avatar"
+                        class="rounded-circle article-img img-fluid mb-2" style="border: 2px solid"></a>
+                        <a class="mr-2 fs-4" href="{{ url_for('user_posts', username=post.author.username) }}">{{ post.author }}</a>
+                        <small class="text-muted">{{ post.date_posted.strftime("%d / %m / %Y") }}</small>
+                    </div>
+                    {% if current_user==post.author %}
+                        <div>
+                            <button type="button" class="btn btn-danger mt-3" data-bs-toggle="modal" data-bs-target="#deletePost{{ post.id }}">Delete</button>
+                            <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#updatePost{{ post.id }}">Update</button>
+                        </div>
+                        <div class="modal fade" id="updatePost{{ post.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content text-bg-dark">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-white">Update Post</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <fieldset class="form-group">
+                                            <form action="{{ url_for('update_posts', id=post.id) }}" method="POST">
+                                                    {{ form.hidden_tag() }}
+                                                <div class="form-group mt-3">
+                                                    {{ form.title.label(class="form-control-label") }}
+                                                    {% if form.title.errors %}
+                                                        {{ form.title(class="form-control is-invalid", value=post.title) }}
+                                                        <div class="invalid-feedback">
+                                                            {% for error in form.title.errors %}
+                                                                <span>
+                                                                    {{ error }}
+                                                                </span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    {% else %}
+                                                        {{ form.title(class="form-control", value=post.title) }}
+                                                    {% endif %}
+                                                </div>
+                                                <div class="form-group mt-3">
+                                                    {{ form.content.label(class="form-control-label") }}
+                                                    {% if form.content.errors %}
+                                                    <textarea class="form-control is-invalid" style="display: block;" name="content" rows="10">{{ post.content }}</textarea>                                                    <div class="invalid-feedback">
+                                                            {% for error in form.content.errors %}
+                                                                <span>
+                                                                    {{ error }}
+                                                                </span>
+                                                            {% endfor %}
+                                                    </div>
+                                                    {% else %}
+                                                    <textarea class="form-control" style="display: block;" name="content" rows="10">{{ post.content }}</textarea>
+                                                    {% endif %}
+                                                </div>
+                                                <button class="btn btn-outline-info rounded-0 form-control mt-3", data-bs-dismiss="modal">Update Post</button>
+                                            </form>
+                                            <button class="btn btn-secondary rounded-0 form-control mt-3", data-bs-dismiss="modal">Cancel</button>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="deletePost{{ post.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content text-bg-dark">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-white">Delete</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{ url_for('delete_posts', id=post.id) }}" method="POST">
+                                            {{ form.hidden_tag() }}
+                                            <fieldset class="form-group">
+                                                <div class="form-group mt-3">
+                                                    {{ form.title.label(class="form-control-label") }}
+                                                    {% if form.title.errors %}
+                                                        {{ form.title(class="form-control is-invalid", value=post.title) }}
+                                                        <div class="invalid-feedback">
+                                                            {% for error in form.title.errors %}
+                                                                <span>
+                                                                    {{ error }}
+                                                                </span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    {% else %}
+                                                        {{ form.title(class="form-control", value=post.title) }}
+                                                    {% endif %}
+                                                </div>
+                                                <div class="form-group mt-3">
+                                                    {{ form.content.label(class="form-control-label") }}
+                                                    {% if form.content.errors %}
+                                                    <textarea class="form-control is-invalid" style="display: block;" name="content" rows="10">{{ post.content }}</textarea>                                                    <div class="invalid-feedback">
+                                                            {% for error in form.content.errors %}
+                                                                <span>
+                                                                    {{ error }}
+                                                                </span>
+                                                            {% endfor %}
+                                                    </div>
+                                                    {% else %}
+                                                    <textarea class="form-control" style="display: block;" name="content" rows="10">{{ post.content }}</textarea>
+                                                    {% endif %}
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <button class="btn btn-outline-info rounded-0", data-bs-dismiss="modal">Delete Post</button>
+                                    </form>
+                                    <button class="btn btn-secondary rounded-0", data-bs-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <h2><a class="article-title" href="{{ url_for('posts', id=post.id) }}">{{ post.title }}</a></h2>
+                <p class="article-content">{{ post.content }}</p>
+            </div>
+        </article>
+    {% endfor %}
+    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
+        {% if page_num %}
+            {% if page_num == posts.page %}
+                <a class="btn btn-info m-2" href="{{ url_for('user_posts', username=user.username, page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info m-2" href="{{ url_for('user_post', username=user.username, page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+{% endblock  %}

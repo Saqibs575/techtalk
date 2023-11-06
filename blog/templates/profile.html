@@ -170,7 +170,7 @@
           }
           $("#profile").html(
           `
-              <form action="{{ url_for('update_profile') }}" method="POST">
+              <form action="{{ url_for('update_profile') }}" method="POST" class="form-floating">
                 {{ form.hidden_tag() }}
                 <div class="card mb-4">
                   <div class="card-body">
@@ -181,7 +181,7 @@
                           <div class="col-sm-9 text-secondary">
                             {% if form.username.errors %}
                                 {{ form.username(value=current_user.username, class="form-control is-invalid") }}
-                                <div class="invalid-feedback">
+                                <div class="invalid-feedback ">
                                     {% for error in form.username.errors %}
                                         <span>
                                             {{ error }}
@@ -199,7 +199,7 @@
                           </div>
                           <div class="col-sm-9 text-secondary">
                             {% if form.email.errors %}
-                                {{ form.email(value=current_user.email, class="form-control is-invalid") }}
+                                {{ form.email(value=current_user.email, class="form-control is-invalid", id="floatingInputValue", type="email") }}
                                 <div class="invalid-feedback">
                                     {% for error in form.email.errors %}
                                         <span>
@@ -208,7 +208,7 @@
                                     {% endfor %}
                                 </div>
                             {% else %}
-                                {{ form.email(value=current_user.email, class="form-control") }}
+                                {{ form.email(value=current_user.email, class="form-control", id="floatingInputValue", type="email") }}
                             {% endif %}
                           </div>
                       </div>
@@ -255,3 +255,4 @@
       
       </script>
     {% endblock %}
+    
