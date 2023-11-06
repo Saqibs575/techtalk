@@ -256,7 +256,7 @@ For any questions or inquiries regarding the license, please contact Saqib Shaik
 -------------------------------------
 -------------------------------------
 
-# **Acknowledgments** <a name="acknowledgements">
+# **Acknowledgments** <a name="acknowledgements"></a>
 This project wouldn't have been possible without the guidance, tutorials, and resources provided by the following individuals and organizations:
 
 - **Corey Schafer (@coreyms):** A big thank you to Corey Schafer for his excellent tutorial on building a blog app with Flask. The tutorial served as a valuable learning resource and provided insights into creating a robust Flask application. You can find the tutorial [here](https://www.youtube.com/playlist?list=PL-osiE80TeTs4UjLw5MM6OjgkjFeUxCYH).
