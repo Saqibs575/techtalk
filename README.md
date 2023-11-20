@@ -168,8 +168,7 @@ pip install SQLAlchemy
 - **Running the Application:** 
 Execute the following command to run the Flask application.
 
-```python
-# Install SQLAlcemy using pip
+```bash
 python app.py
 ```
 
